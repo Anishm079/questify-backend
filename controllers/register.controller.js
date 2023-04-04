@@ -1,6 +1,7 @@
 const User = require("../models/UserSchema");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+require("dotenv").config();
 
 const postUser=async (req,res) =>{
     const {firstname,lastname,email,password,profession}=req.body;
@@ -27,8 +28,8 @@ const postUser=async (req,res) =>{
         })
         await newUser.save();
 
-        const token = jwt.sign({ userId: newUser._id },"companySecretCode");
-        const refreshToken= jwt.sign({ userId: findUser._id },"companySecretCode",{expiresIn:"1d"});
+        const token = jwt.sign({ userId: newUser._id },process.env.COMPANY_SECRETE,{expiresIn:"10000s"});
+        const refreshToken= jwt.sign({ userId: findUser._id },process.env.COMPANY_SECRETE,{expiresIn:"1d"});
         
         res.cookie('jwt',refreshToken,{
             httpOnly:true,

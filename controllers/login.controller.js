@@ -1,6 +1,7 @@
 const User = require("../models/UserSchema");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+require("dotenv").config();
 
 const getUser=async (req,res) =>{
     const {firstname,lastname,email,password,profession}=req.body;
@@ -19,8 +20,8 @@ const getUser=async (req,res) =>{
         if(!pwdVerify)
             return res.status(409).json({error:"Enter valid credentials"})
 
-        const token = jwt.sign({ userId: findUser._id },"companySecretCode",{expiresIn:"30s"});
-        const refreshToken= jwt.sign({ userId: findUser._id },"companySecretCode",{expiresIn:"1d"});
+        const token = jwt.sign({ userId: findUser._id },process.env.COMPANY_SECRETE,{expiresIn:"30s"});
+        const refreshToken= jwt.sign({ userId: findUser._id },process.env.COMPANY_SECRETE,{expiresIn:"1d"});
         
         res.cookie('jwt',refreshToken,{
             httpOnly:true,
