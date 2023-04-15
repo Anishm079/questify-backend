@@ -6,7 +6,7 @@ const AnswerSchema=new mongoose.Schema({
     answer:{type:String,required:true},
     upvotes:{type:Number,default:0},
     downvotes:{type:Number,default:0},
-    date:{type:Date,default:Date.now()}
+    date:{type:Date,require:true}
 })
  
 module.exports=mongoose.model("Answer",AnswerSchema);

@@ -1,4 +1,5 @@
 const Question = require("../models/QuestionSchema");
+const logEvent = require("../utils/logErrors");
 
 const askQuestion = async (req, res, next) => {
   const { question, user_id } = req.body;
@@ -11,6 +12,7 @@ const askQuestion = async (req, res, next) => {
     const resQuestion = await Question.create({
       question,
       user_id,
+      date:new Date(Date.now()),
       upvotes: 0,
       downvotes: 0,
     });
@@ -23,7 +25,7 @@ const askQuestion = async (req, res, next) => {
         .json({ error: "Unexpected error. Question creation failed." });
     }
   } catch (error) {
-    console.error(error);
+    logEvent("askQuestion",error.message)
     return res.status(500).json({ error: "Internal Server Error." });
   }
 };

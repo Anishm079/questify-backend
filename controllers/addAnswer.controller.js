@@ -1,4 +1,5 @@
 const Answer = require("../models/AnswerSchema");
+const logEvent = require("../utils/logErrors");
 
 const addAnswer = async (req, res) => {
   try {
@@ -11,6 +12,7 @@ const addAnswer = async (req, res) => {
       questionId:question_id,
       user_id,
       answer,
+      date:new Date(Date.now()),
       upvotes: 0,
       downvotes: 0,
     });
@@ -23,7 +25,7 @@ const addAnswer = async (req, res) => {
         .json({ error: "Unexpected error. Answer creation failed." });
     }
   } catch (error) {
-    console.error(error);
+    logEvent("addAnswer",error.message)
     return res.status(500).json({ error: "Internal Server Error." });
   }
 };

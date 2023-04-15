@@ -1,5 +1,5 @@
 const Question = require("../models/QuestionSchema");
-
+const logEvent = require("../utils/logErrors");
 
 const allQuestions=async (req,res) =>{
     try {
@@ -15,7 +15,7 @@ const allQuestions=async (req,res) =>{
           res.status(404).json({ error: "No questions found" });
         }
       } catch (error) {
-        console.error(error);
+        logEvent("allQuestions",error.message)
         res.status(500).json({ error: "Internal Server Error Failed !!!" });
       }
 }

@@ -5,7 +5,7 @@ const QuestionSchema=  new mongoose.Schema({
     user_id:{type:mongoose.Schema.Types.ObjectId,ref:"User"},
     upvotes:{type:Number,default:0},
     downvotes:{type:Number,default:0},
-    date:{type:Date,default:Date.now()}
+    date:{type:Date,required:true}
 })
 
 QuestionSchema.index({ question: "text" });

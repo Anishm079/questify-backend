@@ -1,18 +1,20 @@
 const Question = require("../models/QuestionSchema");
 const User = require("../models/UserSchema");
+const logEvent = require("../utils/logErrors");
 
 const upvoteQuestion = async (req, res) => {
   try {
+    let upvoted=false;
     const question_id = req.params.question_id;
     if (!question_id) {
       return res
         .status(400)
-        .json({ error: "Bad Request: Missing or invalid question ID" });
+        .json({upvoted, error: "Bad Request: Missing or invalid question ID" });
     }
 
     const user = await User.findById(req.body.user_id);
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({upvoted, error: "User not found" });
     }
 
     if (user?.upvotes?.includes(question_id)) {
@@ -23,7 +25,8 @@ const upvoteQuestion = async (req, res) => {
         { $inc: { upvotes: -1 } },
         { new: true }
       );
-    return res.status(200).json({ success: "removed upvote" });
+
+    return res.status(200).json({upvoted, success: "removed upvote" });
     }
 
     if(user?.downvotes?.includes(question_id)){
@@ -34,6 +37,7 @@ const upvoteQuestion = async (req, res) => {
         { $inc: { downvotes: -1 } },
         { new: true }
       );
+
     }
 
     const question = await Question.findByIdAndUpdate(
@@ -47,10 +51,11 @@ const upvoteQuestion = async (req, res) => {
 
     user.upvotes.push(question_id);
     await user.save();
-
-    res.status(200).json({ success: "upvoted successfully" });
+    upvoted=true;
+    return res.status(200).json({upvoted, success: "upvoted successfully" });
   } catch (error) {
-    console.error(error.message);
+    logEvent("upvoteQuestion",error.message)
+    return res.status(500).json({error:"internal server error"});
   }
 };
 
