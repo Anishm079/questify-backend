@@ -1,7 +1,7 @@
 const allowedOrigins=require('./allowedOrigins')
 
 const corsOptions={
-    origin:"http://localhost:3000",
+    origin:"https://lovely-griffin-6978bb.netlify.app",
     optionsSuccessStatus:200,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['X-PINGOTHER', 'Content-Type',"Authorization","Origin", 'HEAD', 'OPTIONS',"Accept","Cache-Control",'Cookie','X-Requested-With'],
